@@ -3,13 +3,13 @@
     <!-- Play/Pause Button -->
     <button
       @click="handlePlayClick"
-      :disabled="!playerState.isReady || !playerState.isPremium"
+      :disabled="!playerState.isPremium && playerState.isReady"
       :class="[
         'w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200',
         isCurrentTrack(track.uri) 
           ? 'bg-green-500 text-white hover:bg-green-600' 
           : 'bg-white text-black hover:bg-gray-200',
-        (!playerState.isReady || !playerState.isPremium) 
+        (!playerState.isPremium && playerState.isReady) 
           ? 'opacity-50 cursor-not-allowed' 
           : 'hover:scale-105'
       ]"
@@ -62,7 +62,8 @@ import {
   playTrack, 
   togglePlayback,
   isTrackPlaying,
-  isCurrentTrack
+  isCurrentTrack,
+  initializePlayer
 } from '../services/spotifyPlayer.js'
 
 export default {
@@ -81,7 +82,36 @@ export default {
   },
   methods: {
     async handlePlayClick() {
-      if (!this.playerState.isReady || !this.playerState.isPremium) {
+      // If player is not ready, try to initialize it
+      if (!this.playerState.isReady) {
+        this.isLoading = true
+        try {
+          await initializePlayer()
+          this.$root.$toast?.success('Player initialized successfully!')
+        } catch (error) {
+          console.error('Failed to initialize player:', error)
+          
+          // Handle specific error cases
+          if (error.message.includes('access token')) {
+            this.$root.$toast?.info('Please connect to Spotify first to enable playback')
+            // Redirect to connect page after a short delay
+            setTimeout(() => {
+              this.$router?.push('/connect')
+            }, 2000)
+          } else if (error.message.includes('Premium')) {
+            this.$root.$toast?.warning('Spotify Premium required for playback')
+          } else {
+            this.$root.$toast?.error('Failed to initialize player: ' + error.message)
+          }
+          
+          this.isLoading = false
+          return
+        }
+      }
+      
+      // If still not premium after initialization, show message and return
+      if (!this.playerState.isPremium) {
+        this.$root.$toast?.warning('Spotify Premium required for playback')
         return
       }
 
@@ -99,6 +129,7 @@ export default {
         console.error('Failed to control playback:', error)
         // Show error in player state
         this.playerState.error = error.message
+        this.$root.$toast?.error('Playback failed: ' + error.message)
       } finally {
         this.isLoading = false
       }
@@ -107,10 +138,10 @@ export default {
     isCurrentTrack,
     getButtonTitle() {
       if (!this.playerState.isReady) {
-        return 'Player not ready'
+        return 'Click to connect to Spotify and enable playback'
       }
       if (!this.playerState.isPremium) {
-        return 'Spotify Premium required'
+        return 'Spotify Premium required for playback'
       }
       if (this.isCurrentTrack(this.track.uri)) {
         return this.playerState.isPlaying ? 'Pause' : 'Resume'

@@ -63,7 +63,7 @@
                     </p>
                   </div>
                   
-                  <div class="flex gap-3">
+                  <div class="flex gap-2">
                     <button
                       @click="refreshToken"
                       :disabled="refreshing"
@@ -71,6 +71,7 @@
                     >
                       {{ refreshing ? 'Refreshing...' : 'Refresh Token' }}
                     </button>
+
                     <button
                       @click="revokeAuth"
                       :disabled="revoking"
@@ -241,6 +242,8 @@
         </div>
       </div>
     </div>
+    
+
   </div>
 </template>
 
@@ -250,6 +253,7 @@ import playlistService from '../services/playlists';
 
 export default {
   name: 'ConnectPage',
+
   data() {
     return {
       loading: true,
@@ -401,6 +405,7 @@ export default {
         this.creatingPlaylist = false;
       }
     },
+
     formatDate(dateString) {
       return new Date(dateString).toLocaleDateString('en-US', {
         year: 'numeric',

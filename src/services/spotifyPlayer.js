@@ -61,7 +61,8 @@ export const initializePlayer = async () => {
         console.error('Failed to validate Spotify account:', message)
         playerState.error = 'Spotify Premium required for playback.'
         playerState.isPremium = false
-        reject(new Error(message))
+        // Don't reject here, let the player initialize but mark as non-premium
+        console.warn('Player initialized but Premium account required for playback')
       })
 
       player.addListener('playback_error', ({ message }) => {

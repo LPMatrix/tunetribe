@@ -88,6 +88,7 @@ router.get('/spotify/status', async (req, res) => {
     
     if (isAuthorized) {
       const tokens = await spotifyAuth.loadTokens();
+      
       res.json({
         authorized: true,
         expiresAt: new Date(tokens.expires_at).toISOString(),
@@ -133,6 +134,8 @@ router.post('/spotify/refresh', async (req, res) => {
     });
   }
 });
+
+
 
 // Revoke authorization (clear stored tokens)
 router.post('/spotify/revoke', async (req, res) => {

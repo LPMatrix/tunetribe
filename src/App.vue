@@ -50,13 +50,18 @@ export default {
           console.error('Failed to initialize Spotify player:', error);
           if (error.message.includes('Premium')) {
             this.$toast.warning('Spotify Premium required for playback');
+          } else if (error.message.includes('access token')) {
+            console.log('Access token issue, user may need to reconnect');
+            // Don't show error toast for token issues, let user discover through UI
           } else {
             this.$toast.error('Failed to initialize player: ' + error.message);
           }
         }
+      } else {
+        console.log('User not authenticated with Spotify yet');
       }
     } catch (error) {
-      console.log('No Spotify authentication available');
+      console.log('No Spotify authentication available:', error.message);
     }
   },
   methods: {

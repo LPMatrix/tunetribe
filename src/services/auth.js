@@ -41,6 +41,8 @@ class AuthService {
     }
   }
 
+
+
   // Revoke Spotify authorization
   async revokeSpotifyAuth() {
     try {
