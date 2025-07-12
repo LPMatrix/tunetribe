@@ -1,0 +1,115 @@
+{
+  "messages": [
+    {
+      "id": 1,
+      "text": "Check out this track: https://open.spotify.com/track/6Gh7OWZSkH6JtENR2VUmm0",
+      "date": "2025-07-12T00:21:35.116Z",
+      "from": {
+        "id": 12345,
+        "username": "SireMatrix",
+        "first_name": "SireMatrix",
+        "last_name": ""
+      },
+      "chat": {
+        "id": -4940504527,
+        "type": "group"
+      },
+      "spotify_links": [
+        {
+          "url": "https://open.spotify.com/track/6Gh7OWZSkH6JtENR2VUmm0",
+          "type": "track",
+          "id": "6Gh7OWZSkH6JtENR2VUmm0"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "text": "Check out this track: https://open.spotify.com/track/6WuHPopA05YguoW17LrjT9",
+      "date": "2025-07-12T00:22:09.146Z",
+      "from": {
+        "id": 12345,
+        "username": "SireMatrix",
+        "first_name": "SireMatrix",
+        "last_name": ""
+      },
+      "chat": {
+        "id": -4940504527,
+        "type": "group"
+      },
+      "spotify_links": [
+        {
+          "url": "https://open.spotify.com/track/6WuHPopA05YguoW17LrjT9",
+          "type": "track",
+          "id": "6WuHPopA05YguoW17LrjT9"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "text": "Check out this track: https://open.spotify.com/track/2fclCvYBZL1yEyrfdmYYHU",
+      "date": "2025-07-12T00:34:48.699Z",
+      "from": {
+        "id": 12345,
+        "username": "SireMatrix",
+        "first_name": "SireMatrix",
+        "last_name": ""
+      },
+      "chat": {
+        "id": -4940504527,
+        "type": "group"
+      },
+      "spotify_links": [
+        {
+          "url": "https://open.spotify.com/track/2fclCvYBZL1yEyrfdmYYHU",
+          "type": "track",
+          "id": "2fclCvYBZL1yEyrfdmYYHU"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "text": "Check out this track: https://open.spotify.com/track/0cYA4fs0yrTQubhuZfi7vp",
+      "date": "2025-07-12T01:17:38.132Z",
+      "from": {
+        "id": 12345,
+        "username": "SireMatrix",
+        "first_name": "SireMatrix",
+        "last_name": ""
+      },
+      "chat": {
+        "id": -4940504527,
+        "type": "group"
+      },
+      "spotify_links": [
+        {
+          "url": "https://open.spotify.com/track/0cYA4fs0yrTQubhuZfi7vp",
+          "type": "track",
+          "id": "0cYA4fs0yrTQubhuZfi7vp"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "text": "Check out this track: https://open.spotify.com/track/5EVwZGJO9Is5H5DYfDqx7t",
+      "date": "2025-07-12T02:16:12.989Z",
+      "from": {
+        "id": 12345,
+        "username": "SireMatrix",
+        "first_name": "SireMatrix",
+        "last_name": ""
+      },
+      "chat": {
+        "id": -4940504527,
+        "type": "group"
+      },
+      "spotify_links": [
+        {
+          "url": "https://open.spotify.com/track/5EVwZGJO9Is5H5DYfDqx7t",
+          "type": "track",
+          "id": "5EVwZGJO9Is5H5DYfDqx7t"
+        }
+      ]
+    }
+  ],
+  "lastProcessed": null
+}

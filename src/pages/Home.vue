@@ -1,123 +1,202 @@
 <template>
-  <div class="layout-container flex flex-col min-h-screen bg-gray-900 text-white">
+  <div class="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-blue-900 relative overflow-hidden">
+    <!-- Animated Background Elements -->
+    <div class="absolute inset-0 overflow-hidden">
+      <div class="absolute -top-40 -right-40 w-80 h-80 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-float"></div>
+      <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-blue-500 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-float" style="animation-delay: 2s;"></div>
+      <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-pink-500 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-float" style="animation-delay: 4s;"></div>
+    </div>
+
     <!-- Hero Section -->
-    <div class="relative flex flex-1 items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <div class="absolute inset-0 bg-gradient-to-b from-black/40 to-black/70"></div>
-      <div
-        class="relative max-w-4xl mx-auto text-center flex flex-col items-center gap-6 bg-cover bg-center bg-no-repeat rounded-lg p-8 sm:p-12"
-        :style="`background-image: url('${heroImage}');`"
-      >
-        <h1
-          class="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight"
-        >
-          Discover Your Team’s Soundtrack with Tune Tribe
-        </h1>
-        <p
-          class="text-base sm:text-lg md:text-xl font-normal text-gray-200 max-w-2xl"
-        >
-          Tune Tribe crafts a unique monthly playlist from songs shared in your Telegram group. Connect, share, and vibe to your team’s musical pulse.
-        </p>
-        <div class="flex flex-col sm:flex-row gap-4">
-          <a
-            href="/tracks"
-            class="inline-flex items-center justify-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-md transition-colors duration-200"
-          >
-            Explore Playlists
-          </a>
-          <a
-            href="/connect"
-            class="inline-flex items-center justify-center px-6 py-3 bg-transparent border border-gray-300 hover:bg-gray-800 text-white font-semibold rounded-lg shadow-md transition-colors duration-200"
-          >
-            Connect with Telegram
-          </a>
+    <div class="relative z-10 py-20 px-4 sm:px-6 lg:px-8">
+      <div class="max-w-7xl mx-auto">
+        <div class="text-center">
+          <!-- Logo/Brand Icon -->
+          <div class="mb-8 animate-fade-in-up">
+            <div class="inline-flex items-center justify-center w-24 h-24 bg-white/10 backdrop-blur-sm rounded-full border border-white/20 mb-6">
+              <svg class="w-12 h-12 text-white" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M18 3a1 1 0 0 0-1.196-.98l-10 2A1 1 0 0 0 6 5v6.114A4.369 4.369 0 0 0 5 11a4 4 0 0 0 0 8c1.657 0 3-1.343 3-3s-1.343-3-3-3a3.96 3.96 0 0 0-2 .56V5.82l8-1.6v5.894A4.369 4.369 0 0 0 10 10a4 4 0 0 0 0 8c1.657 0 3-1.343 3-3s-1.343-3-3-3a3.96 3.96 0 0 0-2 .56V4a1 1 0 0 0 1-1h6z"/>
+              </svg>
+            </div>
+          </div>
+
+          <h1 class="text-4xl sm:text-6xl md:text-7xl font-bold tracking-tight mb-6 animate-fade-in-up" style="animation-delay: 0.2s;">
+            <span class="bg-gradient-to-r from-white via-purple-200 to-blue-200 bg-clip-text text-transparent">
+              Tune Tribe
+            </span>
+          </h1>
+          
+          <p class="text-xl sm:text-2xl md:text-3xl text-gray-300 mb-8 max-w-4xl mx-auto leading-relaxed animate-fade-in-up" style="animation-delay: 0.4s;">
+            Transform your team's shared music into 
+            <span class="bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent font-semibold">
+              curated monthly playlists
+            </span>
+            that tell your story
+          </p>
+
+          <!-- Stats Section -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-8 max-w-2xl mx-auto mb-12 animate-fade-in-up" style="animation-delay: 0.6s;">
+            <div class="text-center">
+              <div class="text-3xl sm:text-4xl font-bold text-white mb-2">{{ recentActivity?.totalTracks || '500+' }}</div>
+              <div class="text-purple-300 text-sm uppercase tracking-wide">Curated Tracks</div>
+            </div>
+            <div class="text-center">
+              <div class="text-3xl sm:text-4xl font-bold text-white mb-2">{{ playlists.length || '12' }}</div>
+              <div class="text-purple-300 text-sm uppercase tracking-wide">Monthly Playlists</div>
+            </div>
+            <div class="text-center">
+              <div class="text-3xl sm:text-4xl font-bold text-white mb-2">{{ recentActivity?.activeMembers || '25+' }}</div>
+              <div class="text-purple-300 text-sm uppercase tracking-wide">Active Members</div>
+            </div>
+          </div>
+
+          <div class="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-up" style="animation-delay: 0.8s;">
+            <button
+              @click="handleConnect"
+              class="group inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-bold rounded-xl shadow-2xl transition-all duration-300 transform hover:scale-105 hover:shadow-purple-500/25"
+            >
+              <span>{{ isAuthenticated ? 'View Playlists' : 'Get Started' }}</span>
+              <svg class="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5-5 5M6 12h12"></path>
+              </svg>
+            </button>
+            <a
+              href="/tracks"
+              class="group inline-flex items-center justify-center px-8 py-4 bg-white/10 hover:bg-white/20 text-white font-bold rounded-xl transition-all duration-300 transform hover:scale-105 backdrop-blur-sm border border-white/20"
+            >
+              <svg class="mr-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path>
+              </svg>
+              <span>Explore Music</span>
+            </a>
+          </div>
         </div>
       </div>
     </div>
 
     <!-- How It Works Section -->
-    <div class="py-12 px-4 sm:px-6 lg:px-8 bg-gray-800">
-      <div class="max-w-4xl mx-auto">
-        <h2 class="text-2xl sm:text-3xl font-bold tracking-tight text-center mb-8">
-          How Tune Tribe Works
-        </h2>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          <div class="flex flex-col gap-4 p-6 bg-gray-700 rounded-lg shadow-lg">
-            <div class="flex items-center justify-center h-12 w-12 rounded-full bg-blue-500 text-white">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-6 w-6"
-                fill="currentColor"
-                viewBox="0 0 256 256"
-              >
-                <path
-                  d="M208,32H48A16,16,0,0,0,32,48V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V48A16,16,0,0,0,208,32ZM96,184H80a8,8,0,0,1,0-16H96a8,8,0,0,1,0,16Zm0-32H80a8,8,0,0,1,0-16H96a8,8,0,0,1,0,16Zm0-32H80a8,8,0,0,1,0-16H96a8,8,0,0,1,0,16Zm80,64H112a8,8,0,0,1,0-16h64a8,8,0,0,1,0,16Zm0-32H112a8,8,0,0,1,0-16h64a8,8,0,0,1,0,16Zm0-32H112a8,8,0,0,1,0-16h64a8,8,0,0,1,0,16Z"
-                ></path>
-              </svg>
+    <div class="py-20 px-4 sm:px-6 lg:px-8 bg-black/20 backdrop-blur-sm">
+      <div class="max-w-7xl mx-auto">
+        <div class="text-center mb-16">
+          <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-6">
+            How It <span class="bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">Works</span>
+          </h2>
+          <p class="text-xl text-gray-300 max-w-3xl mx-auto">
+            Three simple steps to transform your team's music sharing into beautiful monthly playlists
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <!-- Step 1 -->
+          <div class="group relative">
+            <div class="bg-gradient-to-br from-purple-900/50 to-blue-900/50 backdrop-blur-sm rounded-2xl p-8 border border-white/10 hover:border-purple-500/50 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl hover:shadow-purple-500/20">
+              <div class="w-16 h-16 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full flex items-center justify-center mb-6 group-hover:animate-pulse-slow">
+                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z"></path>
+                </svg>
+              </div>
+              <h3 class="text-2xl font-bold text-white mb-4">Share Your Tracks</h3>
+              <p class="text-gray-300 leading-relaxed">
+                Team members share their favorite songs through Telegram. Every track becomes part of your collective musical journey.
+              </p>
+              <div class="absolute top-4 right-4 text-6xl font-bold text-purple-500/20 group-hover:text-purple-400/30 transition-colors">
+                01
+              </div>
             </div>
-            <h3 class="text-lg font-semibold">Join via Telegram</h3>
-            <p class="text-gray-300 text-sm">
-              Link your Telegram group to Tune Tribe. Share songs in your designated channel, and we’ll do the rest.
-            </p>
           </div>
-          <div class="flex flex-col gap-4 p-6 bg-gray-700 rounded-lg shadow-lg">
-            <div class="flex items-center justify-center h-12 w-12 rounded-full bg-blue-500 text-white">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-6 w-6"
-                fill="currentColor"
-                viewBox="0 0 256 256"
-              >
-                <path
-                  d="M210.3,56.34l-80-24A8,8,0,0,0,120,40V148.26A48,48,0,1,0,136,184V98.75l69.7,20.91A8,8,0,0,0,216,112V64A8,8,0,0,0,210.3,56.34ZM88,216a32,32,0,1,1,32-32A32,32,0,0,1,88,216ZM200,101.25l-64-19.2V50.75L200,70Z"
-                ></path>
-              </svg>
+
+          <!-- Step 2 -->
+          <div class="group relative">
+            <div class="bg-gradient-to-br from-blue-900/50 to-purple-900/50 backdrop-blur-sm rounded-2xl p-8 border border-white/10 hover:border-blue-500/50 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl hover:shadow-blue-500/20">
+              <div class="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center mb-6 group-hover:animate-pulse-slow">
+                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path>
+                </svg>
+              </div>
+              <h3 class="text-2xl font-bold text-white mb-4">AI Curation</h3>
+              <p class="text-gray-300 leading-relaxed">
+                Our intelligent system analyzes shared tracks, removes duplicates, and creates perfectly balanced playlists that flow naturally.
+              </p>
+              <div class="absolute top-4 right-4 text-6xl font-bold text-blue-500/20 group-hover:text-blue-400/30 transition-colors">
+                02
+              </div>
             </div>
-            <h3 class="text-lg font-semibold">Smart Curation</h3>
-            <p class="text-gray-300 text-sm">
-              Our algorithm analyzes shared tracks to curate a diverse, team-inspired playlist every month.
-            </p>
           </div>
-          <div class="flex flex-col gap-4 p-6 bg-gray-700 rounded-lg shadow-lg">
-            <div class="flex items-center justify-center h-12 w-12 rounded-full bg-blue-500 text-white">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-6 w-6"
-                fill="currentColor"
-                viewBox="0 0 256 256"
-              >
-                <path
-                  d="M232.4,114.49,88.32,26.35a16,16,0,0,0-16.2-.3A15.86,15.86,0,0,0,64,39.87V216.13A15.94,15.94,0,0,0,80,232a16.07,16.07,0,0,0,8.36-2.35L232.4,141.51a15.81,15.81,0,0,0,0-27ZM80,215.94V40l143.83,88Z"
-                ></path>
-              </svg>
+
+          <!-- Step 3 -->
+          <div class="group relative">
+            <div class="bg-gradient-to-br from-purple-900/50 to-pink-900/50 backdrop-blur-sm rounded-2xl p-8 border border-white/10 hover:border-pink-500/50 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl hover:shadow-pink-500/20">
+              <div class="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mb-6 group-hover:animate-pulse-slow">
+                <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M18 3a1 1 0 0 0-1.196-.98l-10 2A1 1 0 0 0 6 5v6.114A4.369 4.369 0 0 0 5 11a4 4 0 0 0 0 8c1.657 0 3-1.343 3-3s-1.343-3-3-3a3.96 3.96 0 0 0-2 .56V5.82l8-1.6v5.894A4.369 4.369 0 0 0 10 10a4 4 0 0 0 0 8c1.657 0 3-1.343 3-3s-1.343-3-3-3a3.96 3.96 0 0 0-2 .56V4a1 1 0 0 0 1-1h6z"/>
+                </svg>
+              </div>
+              <h3 class="text-2xl font-bold text-white mb-4">Monthly Playlists</h3>
+              <p class="text-gray-300 leading-relaxed">
+                Automatically generated Spotify playlists capture your team's musical evolution, creating a soundtrack to your shared experiences.
+              </p>
+              <div class="absolute top-4 right-4 text-6xl font-bold text-pink-500/20 group-hover:text-pink-400/30 transition-colors">
+                03
+              </div>
             </div>
-            <h3 class="text-lg font-semibold">Monthly Vibes</h3>
-            <p class="text-gray-300 text-sm">
-              Get a fresh playlist each month, tailored to your team’s evolving music taste.
-            </p>
           </div>
         </div>
       </div>
     </div>
 
     <!-- Past Playlists Section -->
-    <div class="py-12 px-4 sm:px-6 lg:px-8">
-      <div class="max-w-4xl mx-auto">
-        <h2 class="text-2xl sm:text-3xl font-bold tracking-tight text-center mb-8">
-          Relive Past Playlists
-        </h2>
-        <div class="flex overflow-x-auto gap-6 pb-4 snap-x snap-mandatory">
-          <div
-            v-for="playlist in playlists"
-            :key="playlist.month"
-            class="flex-none w-48 sm:w-56 flex flex-col gap-4 rounded-lg snap-center"
-          >
-            <div
-              class="w-full bg-center bg-no-repeat aspect-square bg-cover rounded-lg"
-              :style="`background-image: url('${playlist.image}');`"
-            ></div>
-            <div>
-              <p class="text-base font-medium">{{ playlist.month }}</p>
-              <p class="text-gray-400 text-sm">{{ playlist.tracks }} Tracks</p>
+    <div class="py-20 px-4 sm:px-6 lg:px-8">
+      <div class="max-w-7xl mx-auto">
+        <div class="text-center mb-16">
+          <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-6">
+            Musical <span class="bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">Timeline</span>
+          </h2>
+          <p class="text-xl text-gray-300 max-w-3xl mx-auto">
+            Explore the evolution of your team's musical taste through our curated monthly collections
+          </p>
+        </div>
+
+        <div class="relative">
+          <div class="flex overflow-x-auto snap-x snap-mandatory gap-6 pb-6 scrollbar-hide">
+            <div v-for="playlist in playlists" :key="playlist.id || playlist.month" class="flex-none w-64 sm:w-72 snap-center">
+              <div class="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-sm border border-white/10 hover:border-purple-500/50 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl hover:shadow-purple-500/20">
+                <div class="relative w-full aspect-square overflow-hidden">
+                  <img 
+                    :src="playlist.image" 
+                    :alt="playlist.month"
+                    class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                  />
+                  <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+                  <div class="absolute bottom-4 left-4 right-4">
+                    <h3 class="text-lg font-bold text-white mb-1">{{ playlist.month }}</h3>
+                    <p class="text-purple-300 text-sm font-medium">{{ playlist.tracks }} Tracks</p>
+                  </div>
+                  <div class="absolute top-4 right-4">
+                    <div class="w-10 h-10 bg-black/50 backdrop-blur-sm rounded-full flex items-center justify-center group-hover:bg-purple-500/80 transition-colors">
+                      <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M8 5v10l7-5-7-5z"/>
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Add more placeholder if no playlists -->
+            <div v-if="playlists.length === 0" class="flex gap-6">
+              <div v-for="i in 3" :key="i" class="flex-none w-64 sm:w-72">
+                <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-gray-800 to-gray-900 border border-gray-700/50">
+                  <div class="w-full aspect-square bg-gradient-to-br from-purple-900/20 to-blue-900/20 flex items-center justify-center">
+                    <svg class="w-16 h-16 text-gray-600" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M18 3a1 1 0 0 0-1.196-.98l-10 2A1 1 0 0 0 6 5v6.114A4.369 4.369 0 0 0 5 11a4 4 0 0 0 0 8c1.657 0 3-1.343 3-3s-1.343-3-3-3a3.96 3.96 0 0 0-2 .56V5.82l8-1.6v5.894A4.369 4.369 0 0 0 10 10a4 4 0 0 0 0 8c1.657 0 3-1.343 3-3s-1.343-3-3-3a3.96 3.96 0 0 0-2 .56V4a1 1 0 0 0 1-1h6z"/>
+                    </svg>
+                  </div>
+                  <div class="p-4">
+                    <h3 class="text-lg font-bold text-gray-400 mb-1">Coming Soon</h3>
+                    <p class="text-gray-500 text-sm">Connect to see playlists</p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -125,54 +204,139 @@
     </div>
 
     <!-- Footer Call-to-Action -->
-    <div class="py-12 px-4 sm:px-6 lg:px-8 bg-blue-600">
-      <div class="max-w-4xl mx-auto text-center">
-        <h2 class="text-2xl sm:text-3xl font-bold tracking-tight mb-4">
-          Ready to Start Your Musical Journey?
+    <div class="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-purple-600 via-blue-600 to-purple-600 relative overflow-hidden">
+      <!-- Background Pattern -->
+      <div class="absolute inset-0 opacity-10">
+        <div class="absolute top-0 left-0 w-full h-full">
+          <svg class="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <defs>
+              <pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse">
+                <path d="M 10 0 L 0 0 0 10" fill="none" stroke="white" stroke-width="0.5"/>
+              </pattern>
+            </defs>
+            <rect width="100" height="100" fill="url(#grid)"/>
+          </svg>
+        </div>
+      </div>
+      
+      <div class="relative max-w-4xl mx-auto text-center">
+        <div class="mb-8">
+          <div class="inline-flex items-center justify-center w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full mb-6">
+            <svg class="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M18 3a1 1 0 0 0-1.196-.98l-10 2A1 1 0 0 0 6 5v6.114A4.369 4.369 0 0 0 5 11a4 4 0 0 0 0 8c1.657 0 3-1.343 3-3s-1.343-3-3-3a3.96 3.96 0 0 0-2 .56V5.82l8-1.6v5.894A4.369 4.369 0 0 0 10 10a4 4 0 0 0 0 8c1.657 0 3-1.343 3-3s-1.343-3-3-3a3.96 3.96 0 0 0-2 .56V4a1 1 0 0 0 1-1h6z"/>
+            </svg>
+          </div>
+        </div>
+        
+        <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-6 text-white">
+          Ready to Start Your
+          <span class="block">Musical Journey?</span>
         </h2>
-        <p class="text-base sm:text-lg text-gray-200 mb-6">
-          Join Tune Tribe today and turn your team’s shared tracks into unforgettable playlists.
+        
+        <p class="text-xl sm:text-2xl text-blue-100 mb-10 max-w-2xl mx-auto leading-relaxed">
+          Join Tune Tribe today and turn your team's shared tracks into unforgettable playlists that tell your story.
         </p>
-        <a
-          href="/connect天子"
-          class="inline-flex items-center justify-center px-6 py-3 bg-white text-blue-600 hover:bg-gray-100 font-semibold rounded-lg shadow-md transition-colors duration-200"
-        >
-          Get Started
-        </a>
+        
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a
+            href="/connect"
+            class="group inline-flex items-center justify-center px-8 py-4 bg-white text-purple-600 hover:bg-gray-100 font-bold rounded-xl shadow-2xl transition-all duration-300 transform hover:scale-105"
+          >
+            <span>Get Started Now</span>
+            <svg class="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5-5 5M6 12h12"></path>
+            </svg>
+          </a>
+          <a
+            href="/tracks"
+            class="group inline-flex items-center justify-center px-8 py-4 bg-transparent border-2 border-white/30 hover:bg-white/10 text-white font-bold rounded-xl transition-all duration-300 transform hover:scale-105 backdrop-blur-sm"
+          >
+            <svg class="mr-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path>
+            </svg>
+            <span>Explore Music</span>
+          </a>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import authService from '../services/auth';
+import playlistService from '../services/playlists';
+
 export default {
   name: 'HomePage',
   data() {
     return {
       heroImage:
         'https://lh3.googleusercontent.com/aida-public/AB6AXuD7A3sfUYB014-2oevB1jvxwGHbtERS-70e6e6qFQw_LvRs3KrA1fUOVi7niTodfAf7WlXykypJYPV3AN2n5kWpquG4Le3qOZsAWK8X_NfoH9vd5wCHRAIJbqB7VbBpPW99lHrDuvdyELn5AXYpOlBecMdKKu3peruI05Om9pWptXq6dwauT6bBASuf918yT1nLB2c28h52XdnBO4xUTLHckhdTPe11qZGgmaBCnZ5lV01JaLb41iylFCvIMM7_e8fr617EuNzPg6CW',
-      playlists: [
-        {
-          month: 'October 2023',
-          tracks: 30,
-          image:
-            'https://lh3.googleusercontent.com/aida-public/AB6AXuA4RzIGapsz-ultH_6JE3DpPvLJLhEckidp24n2pYi_qAJSTCQ8AXW-dyt0t4DRp_6jiM0vjxYyoZmqjA6gqMiEYpV4sNrpcCr-gPRFb390b2oKDH3x6FP6_wiJ-CdMZT5twYb0GkDKyUMyl_m29Cz9dxE1_Vr9ccX81iBicGakwtf7xJmUztGPhCNl750Y6OIsGh-DMRoOfZbQgs_s_9kTtpcCV_l9jf4LFgsINg-nQ0aLvxV6vXwGkI-84UTjVLwTRhX0Gq8t_3ZM',
-        },
-        {
-          month: 'September 2023',
-          tracks: 28,
-          image:
-            'https://lh3.googleusercontent.com/aida-public/AB6AXuAR33X6r1Qwx7yeu5kj5yneCBf2Kt970tLaIWU_GBWmaftjFg-Qv7Sv_uGLw_AfsMesbPh4oCyvCryasuNTTs2dxkPm22uaVeTeP6Mn5eMp5neMlADUJlqg28snrbgbkOXndKMnPcT92xxmlIfXg2yAXi7WsAySO6eul8wrTI5XueMVgtXSHmaCN5ZUrq-bzXZQEu3kgSHWJ6WJo4q2gpA6wx03sHgjYfuqLHTM-fhZy-VrUkXgDRRBWMCJ-28IuNW04fuYTZWCVQf6',
-        },
-        {
-          month: 'August 2023',
-          tracks: 32,
-          image:
-            'https://lh3.googleusercontent.com/aida-public/AB6AXuDxVDmoT6pNPF2wU5ZNu6BJ0WGabc6l6_-cXI7s5DJ96f9I5PJ-I5GwBctXV_QHfasA7Ll-Ut4XU2MLRtHphCyWedIB6tssOgfrQ2GUEcEV4Hvid2zKARgFIr6W_cFmnirM2SbGL2lnL6K-PRRfvtYdylU5z_yHbpyO_LhdbXzPkcyBE55-o30z0I5h2j3x-xgOM-TtwjGhH21nOdCR2_nxPeRpE5WjF2S6-JbgiFst7ti-_fID-wvtEQNea0w8mraA1vdKOiA4ez0c',
-        },
-      ],
+      playlists: [],
+      isAuthenticated: false,
+      loading: true,
+      authStatus: null,
+      recentActivity: null
     };
   },
+  async mounted() {
+    await this.checkAuthStatus();
+    await this.loadRecentPlaylists();
+    await this.loadRecentActivity();
+    this.loading = false;
+  },
+  methods: {
+    async checkAuthStatus() {
+      try {
+        this.authStatus = await authService.getSpotifyAuthStatus();
+        this.isAuthenticated = this.authStatus.authorized;
+      } catch (error) {
+        console.error('Failed to check auth status:', error);
+        this.isAuthenticated = false;
+      }
+    },
+    async loadRecentPlaylists() {
+      try {
+        const userPlaylists = await playlistService.getUserPlaylists();
+        // Filter for TuneTribe playlists and format them
+        this.playlists = userPlaylists.items
+          ?.filter(playlist => playlist.name.includes('TuneTribe'))
+          .slice(0, 6)
+          .map(playlist => ({
+            id: playlist.id,
+            month: playlist.name.replace('TuneTribe - ', ''),
+            tracks: playlist.tracks.total,
+            image: playlist.images?.[0]?.url || this.heroImage,
+            external_url: playlist.external_urls.spotify
+          })) || [];
+      } catch (error) {
+        console.error('Failed to load playlists:', error);
+        // Fallback to sample data if not authenticated
+        this.playlists = [
+          {
+            month: 'Sample Playlist',
+            tracks: 25,
+            image: this.heroImage
+          }
+        ];
+      }
+    },
+    async loadRecentActivity() {
+      try {
+        const messages = await playlistService.getTelegramMessages();
+        this.recentActivity = messages.stats;
+      } catch (error) {
+        console.error('Failed to load recent activity:', error);
+      }
+    },
+    async handleConnect() {
+      if (!this.isAuthenticated) {
+        this.$router.push('/connect');
+      } else {
+        this.$router.push('/playlists');
+      }
+    }
+  }
 };
 </script>
 

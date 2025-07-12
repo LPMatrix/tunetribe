@@ -7,3 +7,17 @@ src/tmp/
 .netlify
 assets/build
 .vercel
+
+# Environment and sensitive data
+.env
+.env.local
+.env.*.local
+server/.env
+server/data/spotify_tokens.json
+server.log
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo

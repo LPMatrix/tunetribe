@@ -33,7 +33,7 @@
             <p class="text-[#9daebe] text-base font-normal leading-normal truncate">Paystack Team</p>
           </div>
           
-          <PlayerControls />
+
         </div>
       </div>
     </div>
@@ -41,13 +41,8 @@
 </template>
 
 <script>
-import PlayerControls from '../components/PlayerControls.vue'
-
 export default {
   name: 'PlayerPage',
-  components: {
-    PlayerControls
-  },
   data() {
     return {
       albumArt: 'https://lh3.googleusercontent.com/aida-public/AB6AXuA2jfx5_smIuManktu25qwKK6qlqi_6S86Hay57rfLZPenhieK-U-Xgw6Uj93v5e6grjebe60bz295FWAdCoSwJKzqIFCg9FChu-KBGIvCoK73EPVQbIP7jr3Gs7o6uNluZ8qf1r_23e_pr_LXAgYTIgeh1e8DRPeEu1KrEZ525ZfjLqQ-eatY-utyiCsX1sldFEPbwGC5rnnfhFzaV94RPieMtcGOq1Xz3hQhA0penp22p3aP2jAPsliDYWK5nDo8N1b39y_kbpJyo'
