@@ -141,7 +141,7 @@ router.post('/spotify/refresh', async (req, res) => {
 router.post('/spotify/revoke', async (req, res) => {
   try {
     // Use the same tokens file path as SpotifyAuth class
-    const tokensFile = path.join(__dirname, '../data/spotify_tokens.json');
+    const tokensFile = path.join(__dirname, '../../data/spotify_tokens.json');
     
     try {
       await fs.unlink(tokensFile);

@@ -9,7 +9,7 @@ const __dirname = path.dirname(__filename);
 
 class TelegramService {
   constructor() {
-    this.messagesFile = path.join(__dirname, '../data/messages.json');
+    this.messagesFile = path.join(__dirname, '../../data/messages.json');
     this.bot = null;
     this.messageStorage = {
       messages: [],

@@ -144,65 +144,6 @@
       </div>
     </div>
 
-    <!-- Past Playlists Section -->
-    <div class="py-20 px-4 sm:px-6 lg:px-8">
-      <div class="max-w-7xl mx-auto">
-        <div class="text-center mb-16">
-          <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-6">
-            Musical <span class="bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">Timeline</span>
-          </h2>
-          <p class="text-xl text-gray-300 max-w-3xl mx-auto">
-            Explore the evolution of your team's musical taste through our curated monthly collections
-          </p>
-        </div>
-
-        <div class="relative">
-          <div class="flex overflow-x-auto snap-x snap-mandatory gap-6 pb-6 scrollbar-hide">
-            <div v-for="playlist in playlists" :key="playlist.id || playlist.month" class="flex-none w-64 sm:w-72 snap-center">
-              <div class="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-sm border border-white/10 hover:border-purple-500/50 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl hover:shadow-purple-500/20">
-                <div class="relative w-full aspect-square overflow-hidden">
-                  <img 
-                    :src="playlist.image" 
-                    :alt="playlist.month"
-                    class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
-                  />
-                  <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
-                  <div class="absolute bottom-4 left-4 right-4">
-                    <h3 class="text-lg font-bold text-white mb-1">{{ playlist.month }}</h3>
-                    <p class="text-purple-300 text-sm font-medium">{{ playlist.tracks }} Tracks</p>
-                  </div>
-                  <div class="absolute top-4 right-4">
-                    <div class="w-10 h-10 bg-black/50 backdrop-blur-sm rounded-full flex items-center justify-center group-hover:bg-purple-500/80 transition-colors">
-                      <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M8 5v10l7-5-7-5z"/>
-                      </svg>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            <!-- Add more placeholder if no playlists -->
-            <div v-if="playlists.length === 0" class="flex gap-6">
-              <div v-for="i in 3" :key="i" class="flex-none w-64 sm:w-72">
-                <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-gray-800 to-gray-900 border border-gray-700/50">
-                  <div class="w-full aspect-square bg-gradient-to-br from-purple-900/20 to-blue-900/20 flex items-center justify-center">
-                    <svg class="w-16 h-16 text-gray-600" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M18 3a1 1 0 0 0-1.196-.98l-10 2A1 1 0 0 0 6 5v6.114A4.369 4.369 0 0 0 5 11a4 4 0 0 0 0 8c1.657 0 3-1.343 3-3s-1.343-3-3-3a3.96 3.96 0 0 0-2 .56V5.82l8-1.6v5.894A4.369 4.369 0 0 0 10 10a4 4 0 0 0 0 8c1.657 0 3-1.343 3-3s-1.343-3-3-3a3.96 3.96 0 0 0-2 .56V4a1 1 0 0 0 1-1h6z"/>
-                    </svg>
-                  </div>
-                  <div class="p-4">
-                    <h3 class="text-lg font-bold text-gray-400 mb-1">Coming Soon</h3>
-                    <p class="text-gray-500 text-sm">Connect to see playlists</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
     <!-- Footer Call-to-Action -->
     <div class="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-purple-600 via-blue-600 to-purple-600 relative overflow-hidden">
       <!-- Background Pattern -->
@@ -293,32 +234,6 @@ export default {
       } catch (error) {
         console.error('Failed to check auth status:', error);
         this.isAuthenticated = false;
-      }
-    },
-    async loadRecentPlaylists() {
-      try {
-        const userPlaylists = await playlistService.getUserPlaylists();
-        // Filter for TuneTribe playlists and format them
-        this.playlists = userPlaylists.items
-          ?.filter(playlist => playlist.name.includes('TuneTribe'))
-          .slice(0, 6)
-          .map(playlist => ({
-            id: playlist.id,
-            month: playlist.name.replace('TuneTribe - ', ''),
-            tracks: playlist.tracks.total,
-            image: playlist.images?.[0]?.url || this.heroImage,
-            external_url: playlist.external_urls.spotify
-          })) || [];
-      } catch (error) {
-        console.error('Failed to load playlists:', error);
-        // Fallback to sample data if not authenticated
-        this.playlists = [
-          {
-            month: 'Sample Playlist',
-            tracks: 25,
-            image: this.heroImage
-          }
-        ];
       }
     },
     async loadRecentActivity() {

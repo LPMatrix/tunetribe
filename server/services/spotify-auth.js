@@ -10,7 +10,7 @@ const __dirname = path.dirname(__filename);
 class SpotifyAuth {
   constructor() {
     // Use the tokens file from the secure data directory
-    this.tokensFile = path.join(__dirname, '../data/spotify_tokens.json');
+    this.tokensFile = path.join(__dirname, '../../data/spotify_tokens.json');
     this.scopes = [
       'playlist-modify-public',
       'playlist-modify-private',

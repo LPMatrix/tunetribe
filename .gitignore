@@ -13,7 +13,7 @@ assets/build
 .env.local
 .env.*.local
 server/.env
-server/data/spotify_tokens.json
+data/spotify_tokens.json
 server.log
 
 # IDE and editor files

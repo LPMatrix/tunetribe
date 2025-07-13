@@ -160,8 +160,8 @@ Scheduled tasks are enabled in production mode or when `ENABLE_SCHEDULER=true` i
 
 The server stores data in JSON files:
 
-- `server/data/spotify_tokens.json` - Spotify OAuth tokens
-- `server/data/messages.json` - Telegram message history
+- `data/spotify_tokens.json` - Spotify OAuth tokens
+- `data/messages.json` - Telegram message history
 
 ## Error Handling
 
