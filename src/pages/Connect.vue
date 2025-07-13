@@ -173,24 +173,6 @@
           </div>
         </div>
 
-        <!-- Track Playback Notice -->
-        <div v-if="authStatus?.authorized" class="mt-8 bg-gradient-to-r from-green-900/30 to-blue-900/30 border border-green-500/30 rounded-lg p-6">
-          <div class="flex items-center gap-3 mb-4">
-            <svg class="w-6 h-6 text-green-400" fill="currentColor" viewBox="0 0 20 20">
-              <path d="M18 3a1 1 0 0 0-1.196-.98l-10 2A1 1 0 0 0 6 5v6.114A4.369 4.369 0 0 0 5 11a4 4 0 0 0 0 8c1.657 0 3-1.343 3-3s-1.343-3-3-3a3.96 3.96 0 0 0-2 .56V5.82l8-1.6v5.894A4.369 4.369 0 0 0 10 10a4 4 0 0 0 0 8c1.657 0 3-1.343 3-3s-1.343-3-3-3a3.96 3.96 0 0 0-2 .56V4a1 1 0 0 0 1-1h6z"/>
-            </svg>
-            <h3 class="text-xl font-semibold text-green-400">🎵 Track Playback Available!</h3>
-          </div>
-          <p class="text-gray-300 mb-4">
-            You can now play full tracks directly in the app! This requires a Spotify Premium account and the latest authorization scopes.
-          </p>
-          <div class="bg-blue-900/30 border border-blue-500/30 rounded-lg p-4 mb-4">
-            <p class="text-blue-300 text-sm mb-2">
-              <strong>💡 Can't play tracks?</strong> If you connected before this update, you may need to re-authorize to enable streaming permissions.
-            </p>
-          </div>
-        </div>
-
         <!-- Next Steps -->
         <div v-if="authStatus?.authorized" class="mt-8 bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-8 shadow-xl">
           <div class="text-center mb-6">
