@@ -1,5 +1,12 @@
 import api from './api';
 
+// Cache for auth status to reduce API calls
+const authCache = {
+  status: null,
+  timestamp: 0,
+  ttl: 30000 // 30 seconds cache
+};
+
 class AuthService {
   // Get Spotify authorization URL
   async getSpotifyAuthUrl() {
@@ -15,16 +22,28 @@ class AuthService {
   async handleSpotifyCallback(code, state) {
     try {
       const response = await api.post('/auth/spotify/callback', { code, state });
+      // Clear cache when auth status changes
+      this.clearAuthCache();
       return response.data;
     } catch (error) {
       throw new Error(`Failed to handle callback: ${error.response?.data?.error || error.message}`);
     }
   }
 
-  // Check Spotify authorization status
+  // Check Spotify authorization status with caching
   async getSpotifyAuthStatus() {
+    const now = Date.now();
+    
+    // Return cached result if still valid
+    if (authCache.status && (now - authCache.timestamp) < authCache.ttl) {
+      return authCache.status;
+    }
+    
     try {
       const response = await api.get('/auth/spotify/status');
+      // Update cache
+      authCache.status = response.data;
+      authCache.timestamp = now;
       return response.data;
     } catch (error) {
       throw new Error(`Failed to check auth status: ${error.response?.data?.error || error.message}`);
@@ -35,22 +54,36 @@ class AuthService {
   async refreshSpotifyToken() {
     try {
       const response = await api.post('/auth/spotify/refresh');
+      // Clear cache when token is refreshed
+      this.clearAuthCache();
       return response.data;
     } catch (error) {
       throw new Error(`Failed to refresh token: ${error.response?.data?.error || error.message}`);
     }
   }
 
-
-
   // Revoke Spotify authorization
   async revokeSpotifyAuth() {
     try {
       const response = await api.post('/auth/spotify/revoke');
+      // Clear cache when auth is revoked
+      this.clearAuthCache();
       return response.data;
     } catch (error) {
       throw new Error(`Failed to revoke authorization: ${error.response?.data?.error || error.message}`);
     }
+  }
+
+  // Clear auth cache
+  clearAuthCache() {
+    authCache.status = null;
+    authCache.timestamp = 0;
+  }
+
+  // Force refresh auth status (bypass cache)
+  async forceRefreshAuthStatus() {
+    this.clearAuthCache();
+    return await this.getSpotifyAuthStatus();
   }
 
   // Authorize with Spotify (opens popup window)

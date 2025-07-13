@@ -163,8 +163,8 @@ export default {
   async mounted() {
     await this.checkAuthStatus();
     
-    // Check auth status periodically
-    this.authCheckInterval = setInterval(this.checkAuthStatus, 30000); // Check every 30 seconds
+    // Check auth status periodically (reduced frequency due to caching)
+    this.authCheckInterval = setInterval(this.checkAuthStatus, 60000); // Check every 60 seconds
   },
   beforeUnmount() {
     if (this.authCheckInterval) {

@@ -6,6 +6,15 @@ class SpotifyService {
   constructor() {
     this.baseURL = 'https://api.spotify.com/v1';
     this._userId = null;
+    
+    // Cache for frequently accessed data
+    this.cache = {
+      userPlaylists: { data: null, timestamp: 0, ttl: 300000 }, // 5 minutes
+      trackDetails: new Map(), // Track ID -> { data, timestamp }
+      searchResults: new Map() // Query -> { data, timestamp }
+    };
+    this.trackCacheTtl = 3600000; // 1 hour for track details
+    this.searchCacheTtl = 600000; // 10 minutes for search results
   }
 
   get userId() {
@@ -18,6 +27,17 @@ class SpotifyService {
       }
     }
     return this._userId;
+  }
+
+  // Cache helper methods
+  clearCache() {
+    this.cache.userPlaylists = { data: null, timestamp: 0, ttl: 300000 };
+    this.cache.trackDetails.clear();
+    this.cache.searchResults.clear();
+  }
+
+  isValidCache(cacheItem, ttl) {
+    return cacheItem && cacheItem.data && (Date.now() - cacheItem.timestamp) < ttl;
   }
 
   async makeSpotifyRequest(endpoint, options = {}) {
@@ -56,6 +76,10 @@ class SpotifyService {
       });
 
       console.log(`✅ Created playlist: ${playlist.name} (${playlist.id})`);
+      
+      // Clear user playlists cache since a new playlist was created
+      this.cache.userPlaylists = { data: null, timestamp: 0, ttl: 300000 };
+      
       return playlist;
     } catch (error) {
       console.error('Error creating playlist:', error);
@@ -96,7 +120,21 @@ class SpotifyService {
 
   async getTrackDetails(trackId) {
     try {
-      return await this.makeSpotifyRequest(`/tracks/${trackId}`);
+      // Check cache first
+      const cached = this.cache.trackDetails.get(trackId);
+      if (this.isValidCache(cached, this.trackCacheTtl)) {
+        return cached.data;
+      }
+      
+      const trackData = await this.makeSpotifyRequest(`/tracks/${trackId}`);
+      
+      // Cache the result
+      this.cache.trackDetails.set(trackId, {
+        data: trackData,
+        timestamp: Date.now()
+      });
+      
+      return trackData;
     } catch (error) {
       console.error(`Error getting track details for ${trackId}:`, error);
       return null;
@@ -192,8 +230,24 @@ class SpotifyService {
 
   async searchTracks(query, limit = 20) {
     try {
+      const cacheKey = `${query}:${limit}`;
+      
+      // Check cache first
+      const cached = this.cache.searchResults.get(cacheKey);
+      if (this.isValidCache(cached, this.searchCacheTtl)) {
+        return cached.data;
+      }
+      
       const response = await this.makeSpotifyRequest(`/search?q=${encodeURIComponent(query)}&type=track&limit=${limit}`);
-      return response.tracks.items;
+      const tracks = response.tracks.items;
+      
+      // Cache the result
+      this.cache.searchResults.set(cacheKey, {
+        data: tracks,
+        timestamp: Date.now()
+      });
+      
+      return tracks;
     } catch (error) {
       console.error('Error searching tracks:', error);
       return [];
@@ -211,8 +265,22 @@ class SpotifyService {
 
   async getUserPlaylists(limit = 50) {
     try {
+      // Check cache first
+      if (this.isValidCache(this.cache.userPlaylists, this.cache.userPlaylists.ttl)) {
+        return this.cache.userPlaylists.data;
+      }
+      
       const response = await this.makeSpotifyRequest(`/me/playlists?limit=${limit}`);
-      return response.items || [];
+      const playlists = response.items || [];
+      
+      // Cache the result
+      this.cache.userPlaylists = {
+        data: playlists,
+        timestamp: Date.now(),
+        ttl: 300000 // 5 minutes
+      };
+      
+      return playlists;
     } catch (error) {
       console.error('Error getting user playlists:', error);
       throw error;
