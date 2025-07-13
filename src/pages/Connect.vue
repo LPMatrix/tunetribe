@@ -188,16 +188,6 @@
             <p class="text-blue-300 text-sm mb-2">
               <strong>💡 Can't play tracks?</strong> If you connected before this update, you may need to re-authorize to enable streaming permissions.
             </p>
-            <button
-              @click="reauthorizeForPlayback"
-              :disabled="connecting"
-              class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 text-white text-sm font-medium rounded-lg transition-colors duration-200"
-            >
-              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd" />
-              </svg>
-              {{ connecting ? 'Re-authorizing...' : 'Re-authorize for Playback' }}
-            </button>
           </div>
         </div>
 
@@ -224,20 +214,7 @@
               </svg>
               View Playlists
             </router-link>
-            <button
-              @click="createCurrentMonthPlaylist"
-              :disabled="creatingPlaylist"
-              class="group inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 disabled:from-gray-600 disabled:to-gray-600 text-white font-bold rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-green-500/25"
-            >
-              <svg v-if="creatingPlaylist" class="animate-spin w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="m4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-              </svg>
-              <svg v-else class="w-5 h-5 mr-2 group-hover:animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-              </svg>
-              {{ creatingPlaylist ? 'Creating...' : 'Create This Month\'s Playlist' }}
-            </button>
+
           </div>
         </div>
       </div>
@@ -262,7 +239,7 @@ export default {
       connecting: false,
       refreshing: false,
       revoking: false,
-      creatingPlaylist: false
+
     };
   },
   computed: {
@@ -340,22 +317,7 @@ export default {
         this.connecting = false;
       }
     },
-    async reauthorizeForPlayback() {
-      this.connecting = true;
-      try {
-        // First revoke existing authorization
-        await authService.revokeSpotifyAuth();
-        // Then re-authorize with new scopes
-        await authService.authorizeWithSpotify();
-        await this.loadConnectionStatus();
-        this.$toast?.success('Successfully re-authorized with playback permissions!');
-      } catch (error) {
-        console.error('Failed to re-authorize:', error);
-        this.$toast?.error(error.message || 'Failed to re-authorize for playback');
-      } finally {
-        this.connecting = false;
-      }
-    },
+
     async refreshToken() {
       this.refreshing = true;
       try {
@@ -386,25 +348,7 @@ export default {
         this.revoking = false;
       }
     },
-    async createCurrentMonthPlaylist() {
-      this.creatingPlaylist = true;
-      try {
-        const now = new Date();
-        const result = await playlistService.createMonthlyPlaylist(now.getFullYear(), now.getMonth() + 1);
-        
-        if (result.playlist) {
-          this.$toast?.success(`Created playlist: ${result.playlist.name}`);
-          this.$router.push('/playlists');
-        } else {
-          this.$toast?.info('No tracks found for this month');
-        }
-      } catch (error) {
-        console.error('Failed to create playlist:', error);
-        this.$toast?.error(error.message || 'Failed to create playlist');
-      } finally {
-        this.creatingPlaylist = false;
-      }
-    },
+
 
     formatDate(dateString) {
       return new Date(dateString).toLocaleDateString('en-US', {

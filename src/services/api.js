@@ -16,7 +16,7 @@ api.interceptors.request.use(
     return config;
   },
   (error) => {
-    console.error('🚨 API Request Error:', error);
+    console.error('API Request Error:', error);
     return Promise.reject(error);
   }
 );
@@ -28,7 +28,7 @@ api.interceptors.response.use(
     return response;
   },
   (error) => {
-    console.error('🚨 API Response Error:', error.response?.data || error.message);
+    console.error('API Response Error:', error.response?.data || error.message);
     
     // Handle specific error cases
     if (error.response?.status === 401) {
@@ -36,7 +36,7 @@ api.interceptors.response.use(
       console.warn('🔒 Unauthorized access - may need to re-authenticate');
     } else if (error.response?.status >= 500) {
       // Handle server errors
-      console.error('🔥 Server error occurred');
+      console.error('Server error occurred');
     }
     
     return Promise.reject(error);
