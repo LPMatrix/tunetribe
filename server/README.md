@@ -201,9 +201,13 @@ The server includes comprehensive error handling:
    ```env
    ENV=production
    WEBHOOK_URL=https://your-domain.com
+   VITE_API_BASE_URL=https://your-domain.com/api
+   SPOTIFY_REDIRECT_URI=https://your-domain.com/api/auth/spotify/callback
    TELEGRAM_BOT_TOKEN=your_bot_token
    TELEGRAM_CHAT_ID=your_chat_id
-   # ... other variables
+   SPOTIFY_CLIENT_ID=your_spotify_client_id
+   SPOTIFY_CLIENT_SECRET=your_spotify_client_secret
+   SPOTIFY_USER_ID=your_spotify_user_id
    ```
 
 2. **Deploy to your hosting platform** (Heroku, Railway, DigitalOcean, etc.)
@@ -233,9 +237,10 @@ WEBHOOK_URL=https://your-domain.com
 
 #### Common Issues
 
+- **Frontend ERR_CONNECTION_REFUSED**: Set `VITE_API_BASE_URL=https://your-domain.com/api` in production environment variables
 - **Webhook not receiving updates**: Ensure your domain is accessible and uses HTTPS
 - **Bot not responding**: Check that `TELEGRAM_CHAT_ID` matches your group/channel
-- **Spotify authentication fails**: Verify redirect URI matches your deployment URL
+- **Spotify authentication fails**: Verify redirect URI matches your deployment URL and update `SPOTIFY_REDIRECT_URI`
 
 ## Development
 
