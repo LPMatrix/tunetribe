@@ -33,10 +33,10 @@ class SpotifyAuth {
     
     // Check for placeholder values
     if (!this.clientId || this.clientId === 'your_spotify_client_id_here') {
-      console.warn('⚠️  SPOTIFY_CLIENT_ID is not set or using placeholder value.');
+      console.warn('SPOTIFY_CLIENT_ID is not set or using placeholder value.');
     }
     if (!this.clientSecret || this.clientSecret === 'your_spotify_client_secret_here') {
-      console.warn('⚠️  SPOTIFY_CLIENT_SECRET is not set or using placeholder value.');
+      console.warn('SPOTIFY_CLIENT_SECRET is not set or using placeholder value.');
     }
     
     this._initialized = true;
@@ -145,7 +145,7 @@ class SpotifyAuth {
     try {
       const data = await fs.readFile(this.tokensFile, 'utf8');
       const tokens = JSON.parse(data);
-      console.log('📄 Loaded Spotify tokens from:', this.tokensFile);
+      console.log('Loaded Spotify tokens from:', this.tokensFile);
       
       // Convert Go bot's ISO string expires_at to timestamp if needed
       if (tokens.expires_at && typeof tokens.expires_at === 'string') {
@@ -155,15 +155,15 @@ class SpotifyAuth {
       return tokens;
     } catch (error) {
       if (error.code === 'ENOENT') {
-        console.log('📄 No tokens file found at:', this.tokensFile);
+        console.log('No tokens file found at:', this.tokensFile);
         return null; // File doesn't exist
       }
       if (error instanceof SyntaxError) {
-        console.error('❌ Invalid JSON in tokens file:', this.tokensFile);
-        console.error('💡 The tokens file may be corrupted. Please re-authorize.');
+        console.error('Invalid JSON in tokens file:', this.tokensFile);
+        console.error('The tokens file may be corrupted. Please re-authorize.');
         return null;
       }
-      console.error('❌ Error reading tokens file:', error.message);
+      console.error('Error reading tokens file:', error.message);
       throw new Error('Failed to load tokens');
     }
   }
@@ -172,13 +172,13 @@ class SpotifyAuth {
     try {
       const tokens = await this.loadTokens();
       if (!tokens) {
-        console.error('❌ No Spotify tokens found. Please authorize the application first.');
-        console.log('💡 Visit /auth/login to authorize the application with Spotify.');
+        console.error('No Spotify tokens found. Please authorize the application first.');
+        console.log('Visit /auth/login to authorize the application with Spotify.');
         throw new Error('No tokens found. Please authorize first.');
       }
 
       if (!tokens.access_token || !tokens.refresh_token) {
-        console.error('❌ Invalid token structure. Missing access_token or refresh_token.');
+        console.error('Invalid token structure. Missing access_token or refresh_token.');
         throw new Error('Invalid token structure. Please re-authorize.');
       }
 
@@ -191,19 +191,19 @@ class SpotifyAuth {
         console.log('🔄 Access token expired, refreshing...');
         try {
           const newTokens = await this.refreshAccessToken(tokens.refresh_token);
-          console.log('✅ Access token refreshed successfully.');
+          console.log('Access token refreshed successfully.');
           return newTokens.access_token;
         } catch (refreshError) {
-          console.error('❌ Failed to refresh token:', refreshError.message);
-          console.log('💡 Please re-authorize the application.');
+          console.error('Failed to refresh token:', refreshError.message);
+          console.log('Please re-authorize the application.');
           throw new Error('Token refresh failed. Please re-authorize.');
         }
       }
 
-      console.log('✅ Using valid access token.');
+      console.log('Using valid access token.');
       return tokens.access_token;
     } catch (error) {
-      console.error('❌ Error getting valid access token:', error.message);
+      console.error('Error getting valid access token:', error.message);
       throw error;
     }
   }

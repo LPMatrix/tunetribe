@@ -23,12 +23,12 @@ class TelegramService {
     this.chatId = process.env.TELEGRAM_CHAT_ID;
     
     if (!this.token || this.token === 'your_telegram_bot_token_here') {
-      console.warn('⚠️  TELEGRAM_BOT_TOKEN is not set or using placeholder value. Telegram bot will be disabled.');
+      console.warn('TELEGRAM_BOT_TOKEN is not set or using placeholder value. Telegram bot will be disabled.');
       return;
     }
 
     if (!this.chatId || this.chatId === 'your_telegram_chat_id_here') {
-      console.warn('⚠️  TELEGRAM_CHAT_ID is not set or using placeholder value. Telegram bot will be disabled.');
+      console.warn('TELEGRAM_CHAT_ID is not set or using placeholder value. Telegram bot will be disabled.');
       return;
     }
 
@@ -38,10 +38,10 @@ class TelegramService {
     if (useWebhook) {
       this.bot = new TelegramBot(this.token);
       await this.setupWebhook();
-      console.log('🤖 Telegram bot initialized with webhook mode');
+      console.log('Telegram bot initialized with webhook mode');
     } else {
       this.bot = new TelegramBot(this.token, { polling: true });
-      console.log('🤖 Telegram bot initialized with polling mode');
+      console.log('Telegram bot initialized with polling mode');
     }
     
     // Load existing messages
@@ -57,7 +57,7 @@ class TelegramService {
       await this.bot.setWebHook(webhookUrl);
       console.log(`🔗 Webhook set to: ${webhookUrl}`);
     } catch (error) {
-      console.error('❌ Error setting up webhook:', error);
+      console.error('Error setting up webhook:', error);
       throw error;
     }
   }
@@ -109,7 +109,7 @@ class TelegramService {
     const spotifyLinks = this.extractSpotifyLinks(msg.text || '');
     if (spotifyLinks.length > 0) {
       messageData.spotify_links = spotifyLinks;
-      console.log(`📱 Found ${spotifyLinks.length} Spotify link(s) in message from ${msg.from?.first_name}`);
+      console.log(`Found ${spotifyLinks.length} Spotify link(s) in message from ${msg.from?.first_name}`);
     }
 
     // Store message if it's new
@@ -159,10 +159,10 @@ class TelegramService {
         this.messageStorage.messages = [];
       }
       
-      console.log(`📚 Loaded ${this.messageStorage.messages.length} stored messages`);
+      console.log(`Loaded ${this.messageStorage.messages.length} stored messages`);
     } catch (error) {
       if (error.code === 'ENOENT') {
-        console.log('📚 No existing messages file found, starting fresh');
+        console.log('No existing messages file found, starting fresh');
         this.messageStorage = { messages: [], lastProcessed: null };
       } else {
         console.error('Error loading messages:', error);

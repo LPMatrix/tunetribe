@@ -63,9 +63,9 @@ async function ensureDataDirectory() {
   try {
     const dataDir = path.join(__dirname, '../data');
     await fs.mkdir(dataDir, { recursive: true });
-    console.log('📁 Data directory ensured');
+    console.log('Data directory ensured');
   } catch (error) {
-    console.error('❌ Failed to create data directory:', error);
+    console.error('Failed to create data directory:', error);
     throw error;
   }
 }
@@ -73,27 +73,27 @@ async function ensureDataDirectory() {
 // Initialize services
 async function startServer() {
   try {
-    console.log('🚀 Starting TuneTribe server...');
+    console.log('Starting TuneTribe server...');
     
     // Ensure data directory exists
     await ensureDataDirectory();
     
     // Initialize Telegram bot
     await initializeTelegramBot();
-    console.log('✅ Telegram bot initialized');
+    console.log('Telegram bot initialized');
     
     // Initialize scheduler
     initializeScheduler();
-    console.log('✅ Scheduler initialized');
+    console.log('Scheduler initialized');
     
     // Start Express server
     app.listen(PORT, '0.0.0.0', () => {
-      console.log(`🌐 Server running on http://localhost:${PORT}`);
-      console.log(`📱 API available at http://localhost:${PORT}/api`);
+      console.log(`Server running on http://localhost:${PORT}`);
+      console.log(`API available at http://localhost:${PORT}/api`);
     });
     
   } catch (error) {
-    console.error('❌ Failed to start server:', error);
+    console.error('Failed to start server:', error);
     process.exit(1);
   }
 }

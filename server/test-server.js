@@ -25,5 +25,5 @@ app.get('/api/test/:id', (req, res) => {
 
 // Start server
 app.listen(PORT, () => {
-  console.log(`🌐 Test server running on http://localhost:${PORT}`);
+  console.log(`Test server running on http://localhost:${PORT}`);
 });

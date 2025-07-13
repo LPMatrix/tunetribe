@@ -24,12 +24,12 @@ class SchedulerService {
         const playlist = await telegramService.createMonthlyPlaylist(year, month);
         
         if (playlist) {
-          console.log(`✅ Successfully created monthly playlist: ${playlist.name}`);
+          console.log(`Successfully created monthly playlist: ${playlist.name}`);
         } else {
-          console.log('ℹ️ No tracks found for monthly playlist creation');
+          console.log('No tracks found for monthly playlist creation');
         }
       } catch (error) {
-        console.error('❌ Error in scheduled monthly playlist creation:', error);
+        console.error('Error in scheduled monthly playlist creation:', error);
       }
     }, {
       scheduled: false, // Don't start immediately
@@ -37,7 +37,7 @@ class SchedulerService {
     });
     
     this.jobs.set('monthlyPlaylist', job);
-    console.log('📅 Monthly playlist creation scheduled for 1st of each month at 9:00 AM UTC');
+    console.log('Monthly playlist creation scheduled for 1st of each month at 9:00 AM UTC');
     
     return job;
   }
@@ -73,12 +73,12 @@ class SchedulerService {
             `🏆 **Top Contributors:**\n${topContributors.join('\n')}`;
           
           await telegramService.sendMessage(message);
-          console.log('✅ Weekly summary sent');
+          console.log('Weekly summary sent');
         } else {
-          console.log('ℹ️ No tracks shared this week, skipping summary');
+          console.log('No tracks shared this week, skipping summary');
         }
       } catch (error) {
-        console.error('❌ Error in scheduled weekly summary:', error);
+        console.error('Error in scheduled weekly summary:', error);
       }
     }, {
       scheduled: false,
@@ -86,18 +86,18 @@ class SchedulerService {
     });
     
     this.jobs.set('weeklySummary', job);
-    console.log('📅 Weekly summary scheduled for Sundays at 6:00 PM UTC');
+    console.log('Weekly summary scheduled for Sundays at 6:00 PM UTC');
     
     return job;
   }
 
   // Start all scheduled jobs
   startAll() {
-    console.log('🚀 Starting all scheduled jobs...');
+    console.log('Starting all scheduled jobs...');
     
     this.jobs.forEach((job, name) => {
       job.start();
-      console.log(`✅ Started job: ${name}`);
+      console.log(`Started job: ${name}`);
     });
   }
 
@@ -116,10 +116,10 @@ class SchedulerService {
     const job = this.jobs.get(jobName);
     if (job) {
       job.start();
-      console.log(`✅ Started job: ${jobName}`);
+      console.log(`Started job: ${jobName}`);
       return true;
     }
-    console.warn(`⚠️ Job not found: ${jobName}`);
+    console.warn(`Job not found: ${jobName}`);
     return false;
   }
 
@@ -131,7 +131,7 @@ class SchedulerService {
       console.log(`🛑 Stopped job: ${jobName}`);
       return true;
     }
-    console.warn(`⚠️ Job not found: ${jobName}`);
+    console.warn(`Job not found: ${jobName}`);
     return false;
   }
 
@@ -160,7 +160,7 @@ class SchedulerService {
 
   // Initialize all scheduled jobs
   initialize() {
-    console.log('📅 Initializing scheduler service...');
+    console.log('Initializing scheduler service...');
     
     this.scheduleMonthlyPlaylistCreation();
     this.scheduleWeeklySummary();
@@ -169,8 +169,8 @@ class SchedulerService {
     if (process.env.ENV === 'production' || process.env.ENABLE_SCHEDULER === 'true') {
       this.startAll();
     } else {
-      console.log('ℹ️ Scheduler jobs created but not started (development mode)');
-      console.log('ℹ️ Set ENABLE_SCHEDULER=true to start jobs in development');
+      console.log('Scheduler jobs created but not started (development mode)');
+      console.log('Set ENABLE_SCHEDULER=true to start jobs in development');
     }
   }
 

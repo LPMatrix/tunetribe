@@ -19,18 +19,18 @@ try {
   console.log('Loading auth routes...');
   const authRoutes = require('./routes/auth');
   app.use('/api/auth', authRoutes);
-  console.log('✅ Auth routes loaded successfully');
+  console.log('Auth routes loaded successfully');
 } catch (error) {
-  console.error('❌ Error loading auth routes:', error.message);
+  console.error('Error loading auth routes:', error.message);
 }
 
 try {
   console.log('Loading playlist routes...');
   const playlistRoutes = require('./routes/playlists');
   app.use('/api/playlists', playlistRoutes);
-  console.log('✅ Playlist routes loaded successfully');
+  console.log('Playlist routes loaded successfully');
 } catch (error) {
-  console.error('❌ Error loading playlist routes:', error.message);
+  console.error('Error loading playlist routes:', error.message);
 }
 
 // Health check
@@ -54,6 +54,6 @@ app.use((req, res, next) => {
 
 // Start Express server
 app.listen(PORT, () => {
-  console.log(`🌐 Debug server running on http://localhost:${PORT}`);
-  console.log(`📱 API available at http://localhost:${PORT}/api`);
+  console.log(`Debug server running on http://localhost:${PORT}`);
+  console.log(`API available at http://localhost:${PORT}/api`);
 });

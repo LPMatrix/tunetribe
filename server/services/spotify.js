@@ -23,7 +23,7 @@ class SpotifyService {
       
       // Check for placeholder values
       if (!this._userId || this._userId === 'your_spotify_user_id_here') {
-        console.warn('⚠️  SPOTIFY_USER_ID is not set or using placeholder value.');
+        console.warn('SPOTIFY_USER_ID is not set or using placeholder value.');
       }
     }
     return this._userId;
@@ -75,7 +75,7 @@ class SpotifyService {
         }
       });
 
-      console.log(`✅ Created playlist: ${playlist.name} (${playlist.id})`);
+      console.log(`Created playlist: ${playlist.name} (${playlist.id})`);
       
       // Clear user playlists cache since a new playlist was created
       this.cache.userPlaylists = { data: null, timestamp: 0, ttl: 300000 };
@@ -111,7 +111,7 @@ class SpotifyService {
         });
       }
 
-      console.log(`✅ Added ${trackUris.length} tracks to playlist ${playlistId}`);
+      console.log(`Added ${trackUris.length} tracks to playlist ${playlistId}`);
     } catch (error) {
       console.error('Error adding tracks to playlist:', error);
       throw error;
@@ -179,7 +179,7 @@ class SpotifyService {
         }
       });
 
-      console.log(`✅ Uploaded cover art for playlist ${playlistId}`);
+      console.log(`Uploaded cover art for playlist ${playlistId}`);
     } catch (error) {
       console.error('Error uploading playlist cover art:', error);
       throw error;
