@@ -47,11 +47,18 @@ router.get('/spotify/callback', async (req, res) => {
     
     // Redirect to frontend with success message
     const frontendUrl = process.env.FRONTEND_URL;
+    if (!frontendUrl) {
+      throw new Error('FRONTEND_URL environment variable is not set');
+    }
     res.redirect(`${frontendUrl}/connect?auth=success`);
   } catch (error) {
     console.error('Error handling Spotify callback:', error);
     // Redirect to frontend with error
     const frontendUrl = process.env.FRONTEND_URL;
+    if (!frontendUrl) {
+      console.error('FRONTEND_URL environment variable is not set');
+      return res.status(500).json({ error: 'Server configuration error: FRONTEND_URL not set' });
+    }
     res.redirect(`${frontendUrl}/connect?auth=error&message=${encodeURIComponent(error.message)}`);
   }
 });
