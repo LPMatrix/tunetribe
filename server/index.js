@@ -3,6 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { promises as fs } from 'fs';
 import { initializeTelegramBot, telegramService } from './services/telegram.js';
 import { initializeScheduler } from './services/scheduler.js';
 import playlistRoutes from './routes/playlists.js';
@@ -57,10 +58,25 @@ app.use((req, res, next) => {
   }
 });
 
+// Ensure data directory exists
+async function ensureDataDirectory() {
+  try {
+    const dataDir = path.join(__dirname, '../data');
+    await fs.mkdir(dataDir, { recursive: true });
+    console.log('📁 Data directory ensured');
+  } catch (error) {
+    console.error('❌ Failed to create data directory:', error);
+    throw error;
+  }
+}
+
 // Initialize services
 async function startServer() {
   try {
     console.log('🚀 Starting TuneTribe server...');
+    
+    // Ensure data directory exists
+    await ensureDataDirectory();
     
     // Initialize Telegram bot
     await initializeTelegramBot();

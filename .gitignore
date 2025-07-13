@@ -14,7 +14,11 @@ assets/build
 .env.*.local
 server/.env
 data/spotify_tokens.json
+data/messages.json
 server.log
+
+# Keep data directory structure
+!data/.gitkeep
 
 # IDE and editor files
 .vscode/
