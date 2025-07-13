@@ -202,6 +202,7 @@ The server includes comprehensive error handling:
    ENV=production
    WEBHOOK_URL=https://your-domain.com
    VITE_API_BASE_URL=https://your-domain.com/api
+   FRONTEND_URL=https://your-domain.com
    SPOTIFY_REDIRECT_URI=https://your-domain.com/api/auth/spotify/callback
    TELEGRAM_BOT_TOKEN=your_bot_token
    TELEGRAM_CHAT_ID=your_chat_id
@@ -241,6 +242,7 @@ WEBHOOK_URL=https://your-domain.com
 - **Webhook not receiving updates**: Ensure your domain is accessible and uses HTTPS
 - **Bot not responding**: Check that `TELEGRAM_CHAT_ID` matches your group/channel
 - **Spotify authentication fails**: Verify redirect URI matches your deployment URL and update `SPOTIFY_REDIRECT_URI`
+- **Spotify redirects to localhost**: Set `FRONTEND_URL=https://your-domain.com` to ensure proper redirect handling in production
 
 ## Development
 

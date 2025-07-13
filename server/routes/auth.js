@@ -46,11 +46,13 @@ router.get('/spotify/callback', async (req, res) => {
     const tokens = await spotifyAuth.exchangeCodeForTokens(code);
     
     // Redirect to frontend with success message
-    res.redirect(`http://localhost:5174/connect?auth=success`);
+    const frontendUrl = process.env.FRONTEND_URL;
+    res.redirect(`${frontendUrl}/connect?auth=success`);
   } catch (error) {
     console.error('Error handling Spotify callback:', error);
     // Redirect to frontend with error
-    res.redirect(`http://localhost:5174/connect?auth=error&message=${encodeURIComponent(error.message)}`);
+    const frontendUrl = process.env.FRONTEND_URL;
+    res.redirect(`${frontendUrl}/connect?auth=error&message=${encodeURIComponent(error.message)}`);
   }
 });
 
