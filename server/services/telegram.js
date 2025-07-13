@@ -32,15 +32,34 @@ class TelegramService {
       return;
     }
 
-    this.bot = new TelegramBot(this.token, { polling: true });
+    // Use webhooks in production, polling in development
+    const useWebhook = process.env.NODE_ENV === 'production' || process.env.USE_WEBHOOK === 'true';
+    
+    if (useWebhook) {
+      this.bot = new TelegramBot(this.token);
+      await this.setupWebhook();
+      console.log('🤖 Telegram bot initialized with webhook mode');
+    } else {
+      this.bot = new TelegramBot(this.token, { polling: true });
+      console.log('🤖 Telegram bot initialized with polling mode');
+    }
     
     // Load existing messages
     await this.loadMessages();
     
     // Set up message handlers
     this.setupMessageHandlers();
-    
-    console.log('🤖 Telegram bot initialized and listening for messages');
+  }
+
+  async setupWebhook() {
+    try {
+      const webhookUrl = `${process.env.WEBHOOK_URL}/api/telegram/webhook`;
+      await this.bot.setWebHook(webhookUrl);
+      console.log(`🔗 Webhook set to: ${webhookUrl}`);
+    } catch (error) {
+      console.error('❌ Error setting up webhook:', error);
+      throw error;
+    }
   }
 
   setupMessageHandlers() {
@@ -174,6 +193,22 @@ class TelegramService {
       console.error('Error sending message:', error);
       throw error;
     }
+  }
+
+  // Handle webhook updates
+  async handleWebhookUpdate(update) {
+    try {
+      if (update.message) {
+        await this.processMessage(update.message);
+      }
+    } catch (error) {
+      console.error('Error processing webhook update:', error);
+    }
+  }
+
+  // Get bot instance for webhook verification
+  getBot() {
+    return this.bot;
   }
 
   async getMessagesInDateRange(startDate, endDate) {

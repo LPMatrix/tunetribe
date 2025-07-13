@@ -68,6 +68,26 @@ ENV=development
 3. Add the bot to your group/channel
 4. Get the chat ID using [@userinfobot](https://t.me/userinfobot)
 
+#### Webhook vs Polling Configuration
+
+The bot supports two modes:
+
+**Development (Polling Mode)**:
+- Uses long polling to receive updates
+- Suitable for local development
+- Default when `NODE_ENV=development`
+
+**Production (Webhook Mode)**:
+- Uses webhooks for better performance and reliability
+- Required for most production deployments
+- Activated when `NODE_ENV=production` or `USE_WEBHOOK=true`
+
+For production deployment, add these environment variables:
+```env
+NODE_ENV=production
+WEBHOOK_URL=https://your-domain.com
+```
+
 ### 3. Spotify App Setup
 
 1. Go to [Spotify Developer Dashboard](https://developer.spotify.com/dashboard)
@@ -125,6 +145,7 @@ npm run server
 
 - `GET /api/playlists/telegram/messages` - Get Telegram messages
 - `GET /api/playlists/telegram/spotify-links` - Get Spotify links from messages
+- `POST /api/telegram/webhook` - Telegram webhook endpoint (production only)
 
 ### Tracks
 
@@ -171,6 +192,50 @@ The server includes comprehensive error handling:
 - Token refresh automation
 - Telegram bot reconnection
 - Graceful shutdown handling
+
+## Deployment
+
+### Production Deployment
+
+1. **Set Environment Variables**:
+   ```env
+   NODE_ENV=production
+   WEBHOOK_URL=https://your-domain.com
+   TELEGRAM_BOT_TOKEN=your_bot_token
+   TELEGRAM_CHAT_ID=your_chat_id
+   # ... other variables
+   ```
+
+2. **Deploy to your hosting platform** (Heroku, Railway, DigitalOcean, etc.)
+
+3. **The webhook will be automatically configured** when the server starts
+
+### Troubleshooting Deployment Issues
+
+#### Telegram Error: 409 Conflict
+
+If you encounter `TelegramError: ETELEGRAM: 409 Conflict: terminated by other getUpdates request`, this means multiple bot instances are running:
+
+**Solution 1: Clear existing webhooks**
+```bash
+curl -X POST "https://api.telegram.org/bot<YOUR_BOT_TOKEN>/deleteWebhook"
+```
+
+**Solution 2: Stop all local instances**
+- Ensure no local development servers are running
+- Check for background processes
+
+**Solution 3: Force webhook mode**
+```env
+USE_WEBHOOK=true
+WEBHOOK_URL=https://your-domain.com
+```
+
+#### Common Issues
+
+- **Webhook not receiving updates**: Ensure your domain is accessible and uses HTTPS
+- **Bot not responding**: Check that `TELEGRAM_CHAT_ID` matches your group/channel
+- **Spotify authentication fails**: Verify redirect URI matches your deployment URL
 
 ## Development
 

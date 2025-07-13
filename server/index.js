@@ -3,7 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { initializeTelegramBot } from './services/telegram.js';
+import { initializeTelegramBot, telegramService } from './services/telegram.js';
 import { initializeScheduler } from './services/scheduler.js';
 import playlistRoutes from './routes/playlists.js';
 import authRoutes from './routes/auth.js';
@@ -26,6 +26,17 @@ app.use(express.static(path.join(__dirname, '../dist')));
 // Routes
 app.use('/api/playlists', playlistRoutes);
 app.use('/api/auth', authRoutes);
+
+// Telegram webhook route
+app.post('/api/telegram/webhook', express.json(), async (req, res) => {
+  try {
+    await telegramService.handleWebhookUpdate(req.body);
+    res.status(200).send('OK');
+  } catch (error) {
+    console.error('Webhook error:', error);
+    res.status(500).send('Error');
+  }
+});
 
 // Health check
 app.get('/api/health', (req, res) => {
