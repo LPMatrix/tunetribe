@@ -75,16 +75,16 @@ The bot supports two modes:
 **Development (Polling Mode)**:
 - Uses long polling to receive updates
 - Suitable for local development
-- Default when `NODE_ENV=development`
+- Default when `ENV=development`
 
 **Production (Webhook Mode)**:
 - Uses webhooks for better performance and reliability
 - Required for most production deployments
-- Activated when `NODE_ENV=production` or `USE_WEBHOOK=true`
+- Activated when `ENV=production` or `USE_WEBHOOK=true`
 
 For production deployment, add these environment variables:
 ```env
-NODE_ENV=production
+ENV=production
 WEBHOOK_URL=https://your-domain.com
 ```
 
@@ -199,7 +199,7 @@ The server includes comprehensive error handling:
 
 1. **Set Environment Variables**:
    ```env
-   NODE_ENV=production
+   ENV=production
    WEBHOOK_URL=https://your-domain.com
    TELEGRAM_BOT_TOKEN=your_bot_token
    TELEGRAM_CHAT_ID=your_chat_id

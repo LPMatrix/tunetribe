@@ -33,7 +33,7 @@ class TelegramService {
     }
 
     // Use webhooks in production, polling in development
-    const useWebhook = process.env.NODE_ENV === 'production' || process.env.USE_WEBHOOK === 'true';
+    const useWebhook = process.env.ENV === 'production' || process.env.USE_WEBHOOK === 'true';
     
     if (useWebhook) {
       this.bot = new TelegramBot(this.token);
