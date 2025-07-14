@@ -1,7 +1,3 @@
-# TuneTribe Server
-
-Node.js backend server for TuneTribe - A collaborative music discovery platform that integrates Telegram bot functionality with Spotify playlist management.
-
 ## Features
 
 - **Telegram Bot Integration**: Automatically monitors Telegram chat for Spotify links
@@ -102,27 +98,6 @@ WEBHOOK_URL=https://your-domain.com
 npm install
 ```
 
-## Running the Server
-
-### Development Mode
-
-```bash
-# Run server only
-npm run server:dev
-
-# Run both frontend and backend
-npm run dev:full
-```
-
-### Production Mode
-
-```bash
-# Build and start
-npm start
-
-# Or run server only
-npm run server
-```
 
 ## API Endpoints
 
@@ -215,54 +190,3 @@ The server includes comprehensive error handling:
 
 3. **The webhook will be automatically configured** when the server starts
 
-## Development
-
-### Project Structure
-
-```
-server/
-├── index.js              # Main server file
-├── routes/
-│   ├── auth.js          # Authentication routes
-│   └── playlists.js     # Playlist management routes
-├── services/
-│   ├── spotify-auth.js  # Spotify OAuth handling
-│   ├── spotify.js       # Spotify API integration
-│   ├── telegram.js      # Telegram bot service
-│   ├── cover-art.js     # Cover art generation
-│   └── scheduler.js     # Scheduled tasks
-├── assets/
-│   └── fonts/           # Fonts for cover art
-├── data/                # JSON data storage
-└── .env                 # Environment configuration
-```
-
-### Logs
-
-The server provides detailed logging:
-
-- 🚀 Server startup
-- 🤖 Telegram bot events
-- 🎵 Spotify API calls
-- 📅 Scheduled task execution
-- ❌ Error details
-
-## Security Considerations
-
-- Store sensitive credentials in environment variables
-- Use HTTPS in production
-- Implement rate limiting for API endpoints
-- Validate all user inputs
-- Keep dependencies updated
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests if applicable
-5. Submit a pull request
-
-## License
-
-This project is licensed under the MIT License.

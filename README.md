@@ -1,29 +1,59 @@
-# radio
+# TuneTribe
 
-This template should help get you started developing with Vue 3 in Vite.
+TuneTribe - A collaborative music discovery platform that integrates Telegram bot functionality with Spotify playlist management.
 
-## Recommended IDE Setup
+## Development
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+### Project Structure
 
-## Customize configuration
-
-See [Vite Configuration Reference](https://vite.dev/config/).
-
-## Project Setup
-
-```sh
-npm install
+```
+server/
+├── index.js              # Main server file
+├── routes/
+│   ├── auth.js          # Authentication routes
+│   └── playlists.js     # Playlist management routes
+├── services/
+│   ├── spotify-auth.js  # Spotify OAuth handling
+│   ├── spotify.js       # Spotify API integration
+│   ├── telegram.js      # Telegram bot service
+│   ├── cover-art.js     # Cover art generation
+│   └── scheduler.js     # Scheduled tasks
+├── assets/
+│   └── fonts/           # Fonts for cover art
+├── data/                # JSON data storage
+└── .env                 # Environment configuration
 ```
 
-### Compile and Hot-Reload for Development
+## Running the Server
 
-```sh
-npm run dev
+### Development Mode
+
+```bash
+# Run server only
+npm run server:dev
+
+# Run both frontend and backend
+npm run dev:full
 ```
 
-### Compile and Minify for Production
+### Production Mode
 
-```sh
-npm run build
+```bash
+# Build and start
+npm start
+
+# Or run server only
+npm run server
 ```
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests if applicable
+5. Submit a pull request
+
+## License
+
+This project is licensed under the MIT License.
