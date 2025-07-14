@@ -1,4 +1,5 @@
 import api from './api';
+import cache from './cache';
 
 // Cache for auth status to reduce API calls
 const authCache = {
@@ -32,21 +33,20 @@ class AuthService {
 
   // Check Spotify authorization status with caching
   async getSpotifyAuthStatus() {
-    const now = Date.now();
-    
-    // Return cached result if still valid
-    if (authCache.status && (now - authCache.timestamp) < authCache.ttl) {
-      return authCache.status;
+    // Check enhanced cache first
+    const cached = cache.get('spotify_auth_status');
+    if (cached) {
+      return cached;
     }
     
     try {
       const response = await api.get('/auth/spotify/status');
-      // Update cache
-      authCache.status = response.data;
-      authCache.timestamp = now;
+      // Store in enhanced cache with auth dataType
+      cache.set('spotify_auth_status', response.data, null, 'auth');
       return response.data;
     } catch (error) {
-      throw new Error(`Failed to check auth status: ${error.response?.data?.error || error.message}`);
+      console.error('Failed to get Spotify auth status:', error);
+      throw error;
     }
   }
 
@@ -76,8 +76,10 @@ class AuthService {
 
   // Clear auth cache
   clearAuthCache() {
+    // Clear both old and new cache systems for compatibility
     authCache.status = null;
     authCache.timestamp = 0;
+    cache.del('spotify_auth_status');
   }
 
   // Force refresh auth status (bypass cache)

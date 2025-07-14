@@ -11,7 +11,7 @@ class PlaylistService {
 
     try {
       const response = await api.get('/playlists');
-      cache.set('playlists', response.data, 300000); // 5 minutes
+      cache.set('playlists', response.data, null, 'playlists'); // Smart TTL based on environment
       return response.data;
     } catch (error) {
       throw new Error(`Failed to fetch playlists: ${error.response?.data?.error || error.message}`);
@@ -27,7 +27,7 @@ class PlaylistService {
 
     try {
       const response = await api.get(`/playlists/${playlistId}`);
-      cache.set(`playlist:${playlistId}`, response.data, 300000); // 5 minutes
+      cache.set(`playlist:${playlistId}`, response.data, null, 'playlists'); // Smart TTL based on environment
       return response.data;
     } catch (error) {
       throw new Error(`Failed to fetch playlist: ${error.response?.data?.error || error.message}`);

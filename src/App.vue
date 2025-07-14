@@ -20,6 +20,8 @@ import Header from './components/Header.vue';
 import PlayerBar from './components/PlayerBar.vue';
 import { initializePlayer } from './services/spotifyPlayer.js';
 import authService from './services/auth.js';
+import { warmCriticalCaches, getCacheMetrics } from './utils/cacheWarming.js';
+import cache from './services/cache.js';
 
 export default {
   name: 'App',
@@ -28,6 +30,9 @@ export default {
     PlayerBar
   },
   async mounted() {
+    console.log('🚀 TuneTribe starting up...');
+    const startTime = performance.now();
+    
     // Simple toast system
     this.$toast = {
       success: (message) => this.showToast(message, 'success'),
@@ -38,6 +43,11 @@ export default {
     
     // Make toast available globally
     this.$root.$toast = this.$toast;
+    
+    // Start cache warming in background (non-blocking)
+    warmCriticalCaches().catch(error => {
+      console.warn('Cache warming failed:', error);
+    });
     
     // Initialize Spotify player if user is authenticated
     try {
@@ -62,6 +72,20 @@ export default {
       }
     } catch (error) {
       console.log('No Spotify authentication available:', error.message);
+    }
+    
+    // Log startup performance
+    const endTime = performance.now();
+    console.log(`⚡ TuneTribe startup completed in ${(endTime - startTime).toFixed(2)}ms`);
+    
+    // Set up periodic cache metrics logging (development only)
+    if (import.meta.env.DEV) {
+      setInterval(() => {
+        const metrics = getCacheMetrics();
+        if (metrics.hits + metrics.misses > 0) {
+          console.log('📊 Cache metrics:', metrics);
+        }
+      }, 60000); // Log every minute
     }
   },
   methods: {
