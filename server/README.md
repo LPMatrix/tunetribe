@@ -215,35 +215,6 @@ The server includes comprehensive error handling:
 
 3. **The webhook will be automatically configured** when the server starts
 
-### Troubleshooting Deployment Issues
-
-#### Telegram Error: 409 Conflict
-
-If you encounter `TelegramError: ETELEGRAM: 409 Conflict: terminated by other getUpdates request`, this means multiple bot instances are running:
-
-**Solution 1: Clear existing webhooks**
-```bash
-curl -X POST "https://api.telegram.org/bot<YOUR_BOT_TOKEN>/deleteWebhook"
-```
-
-**Solution 2: Stop all local instances**
-- Ensure no local development servers are running
-- Check for background processes
-
-**Solution 3: Force webhook mode**
-```env
-USE_WEBHOOK=true
-WEBHOOK_URL=https://your-domain.com
-```
-
-#### Common Issues
-
-- **Frontend ERR_CONNECTION_REFUSED**: Set `VITE_API_BASE_URL=https://your-domain.com/api` in production environment variables
-- **Webhook not receiving updates**: Ensure your domain is accessible and uses HTTPS
-- **Bot not responding**: Check that `TELEGRAM_CHAT_ID` matches your group/channel
-- **Spotify authentication fails**: Verify redirect URI matches your deployment URL and update `SPOTIFY_REDIRECT_URI`
-- **Spotify redirects to localhost**: Set `FRONTEND_URL=https://your-domain.com` to ensure proper redirect handling in production
-
 ## Development
 
 ### Project Structure
@@ -265,36 +236,6 @@ server/
 ├── data/                # JSON data storage
 └── .env                 # Environment configuration
 ```
-
-### Adding New Features
-
-1. **New API Endpoints**: Add routes in `routes/` directory
-2. **New Services**: Create services in `services/` directory
-3. **New Scheduled Tasks**: Add to `services/scheduler.js`
-4. **Database Integration**: Replace JSON storage with database
-
-## Troubleshooting
-
-### Common Issues
-
-1. **Canvas Installation Errors**:
-   - Install system dependencies for your OS
-   - Use Node.js 16+ for better Canvas compatibility
-
-2. **Telegram Bot Not Responding**:
-   - Check bot token and chat ID
-   - Ensure bot is added to the group
-   - Verify network connectivity
-
-3. **Spotify Authorization Fails**:
-   - Check client ID and secret
-   - Verify redirect URI matches exactly
-   - Ensure app is not in development mode restrictions
-
-4. **Server Won't Start**:
-   - Check port availability
-   - Verify all environment variables are set
-   - Check Node.js version compatibility
 
 ### Logs
 
