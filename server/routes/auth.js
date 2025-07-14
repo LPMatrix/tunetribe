@@ -151,6 +151,24 @@ router.get('/spotify/status', async (req, res) => {
   }
 });
 
+// Get valid access token for player
+router.get('/spotify/token', async (req, res) => {
+  try {
+    const accessToken = await spotifyAuth.getValidAccessToken();
+    res.json({ 
+      access_token: accessToken,
+      message: 'Valid access token retrieved'
+    });
+  } catch (error) {
+    console.error('Error getting access token:', error);
+    res.status(401).json({ 
+      error: 'Failed to get valid access token',
+      details: error.message,
+      requiresAuth: true
+    });
+  }
+});
+
 // Refresh Spotify token
 router.post('/spotify/refresh', async (req, res) => {
   try {

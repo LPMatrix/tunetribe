@@ -18,14 +18,23 @@ export const playerState = reactive({
 let player = null
 let spotifyToken = null
 
+// Get fresh access token
+const getAccessToken = async () => {
+  try {
+    return await authService.getSpotifyAccessToken()
+  } catch (error) {
+    console.error('Error getting access token:', error)
+    throw error
+  }
+}
+
 // Initialize the Spotify Web Playback SDK
 export const initializePlayer = async () => {
   return new Promise((resolve, reject) => {
     // Wait for Spotify SDK to load
     window.onSpotifyWebPlaybackSDKReady = async () => {
       try {
-        const authStatus = await authService.getSpotifyAuthStatus()
-        spotifyToken = authStatus.access_token
+        spotifyToken = await getAccessToken()
         
         if (!spotifyToken) {
           reject(new Error('No Spotify access token available'))
@@ -38,8 +47,17 @@ export const initializePlayer = async () => {
 
       player = new window.Spotify.Player({
         name: 'Tune Tribe Web Player',
-        getOAuthToken: cb => {
-          cb(spotifyToken)
+        getOAuthToken: async cb => {
+          try {
+            // Always get a fresh token to handle expiration
+            const freshToken = await getAccessToken()
+            spotifyToken = freshToken
+            cb(freshToken)
+          } catch (error) {
+            console.error('Failed to get OAuth token:', error)
+            playerState.error = 'Authentication failed. Please reconnect to Spotify.'
+            cb(null)
+          }
         },
         volume: playerState.volume
       })
@@ -118,11 +136,15 @@ export const initializePlayer = async () => {
 
 // Play a track
 export const playTrack = async (trackUri) => {
-  if (!player || !playerState.deviceId || !spotifyToken) {
+  if (!player || !playerState.deviceId) {
     throw new Error('Player not ready')
   }
 
   try {
+    // Get fresh token before making API call
+    const freshToken = await getAccessToken()
+    spotifyToken = freshToken
+    
     const response = await fetch(`https://api.spotify.com/v1/me/player/play?device_id=${playerState.deviceId}`, {
       method: 'PUT',
       body: JSON.stringify({
@@ -135,11 +157,24 @@ export const playTrack = async (trackUri) => {
     })
 
     if (!response.ok) {
+      if (response.status === 401) {
+        // Token expired, redirect to connect page
+        redirectToConnect('Authentication expired. Please reconnect to Spotify.')
+        return
+      }
+      
       const error = await response.json()
       throw new Error(error.error?.message || 'Failed to play track')
     }
   } catch (error) {
     console.error('Error playing track:', error)
+    
+    // If it's an auth error, redirect to connect page
+    if (error.message.includes('Failed to get access token') || error.message.includes('Authentication')) {
+      redirectToConnect('Authentication required. Please reconnect to Spotify.')
+      return
+    }
+    
     playerState.error = error.message
     throw error
   }
@@ -227,4 +262,20 @@ export const isTrackPlaying = (trackUri) => {
 // Check if track is current (but may be paused)
 export const isCurrentTrack = (trackUri) => {
   return playerState.currentTrack?.uri === trackUri
+}
+
+// Check if user needs to reconnect to Spotify
+export const needsReconnection = async () => {
+  try {
+    const authStatus = await authService.getSpotifyAuthStatus()
+    return !authStatus.authorized
+  } catch (error) {
+    return true
+  }
+}
+
+// Redirect to connect page with error message
+const redirectToConnect = (message = 'Please reconnect to Spotify') => {
+  playerState.error = message
+  window.location.href = '/connect'
 }

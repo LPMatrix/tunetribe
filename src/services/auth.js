@@ -50,6 +50,20 @@ class AuthService {
     }
   }
 
+  // Get valid access token for player
+  async getSpotifyAccessToken() {
+    try {
+      const response = await api.get('/auth/spotify/token');
+      return response.data.access_token;
+    } catch (error) {
+      console.error('Failed to get Spotify access token:', error);
+      if (error.response?.status === 401) {
+        throw new Error('Authentication required. Please reconnect to Spotify.');
+      }
+      throw error;
+    }
+  }
+
   // Refresh Spotify token
   async refreshSpotifyToken() {
     try {
