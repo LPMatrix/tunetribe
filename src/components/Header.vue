@@ -56,13 +56,13 @@
         <!-- Connection Status & Profile -->
         <div class="flex items-center gap-4">
           <!-- Connection Status Indicator -->
-          <div v-if="authStatus !== null" class="hidden sm:flex items-center gap-2">
+          <div class="hidden sm:flex items-center gap-2">
             <div 
-              :class="authStatus ? 'bg-green-400' : 'bg-red-400'" 
+              :class="authStatus === true ? 'bg-green-400' : authStatus === false ? 'bg-red-400' : 'bg-yellow-400'" 
               class="w-2 h-2 rounded-full"
             ></div>
             <span class="text-sm text-purple-200">
-              {{ authStatus ? 'Connected' : 'Disconnected' }}
+              {{ authStatus === true ? 'Connected' : authStatus === false ? 'Disconnected' : 'Checking...' }}
             </span>
           </div>
 
@@ -132,14 +132,14 @@
         </nav>
         
         <!-- Mobile Connection Status -->
-        <div v-if="authStatus !== null" class="mt-4 pt-4 border-t border-purple-500/30">
+        <div class="mt-4 pt-4 border-t border-purple-500/30">
           <div class="flex items-center gap-3 px-3 py-2">
             <div 
-              :class="authStatus ? 'bg-green-400' : 'bg-red-400'" 
+              :class="authStatus === true ? 'bg-green-400' : authStatus === false ? 'bg-red-400' : 'bg-yellow-400'" 
               class="w-3 h-3 rounded-full"
             ></div>
             <span class="text-sm text-purple-200">
-              Spotify {{ authStatus ? 'Connected' : 'Disconnected' }}
+              Spotify {{ authStatus === true ? 'Connected' : authStatus === false ? 'Disconnected' : 'Checking...' }}
             </span>
           </div>
         </div>
@@ -174,10 +174,13 @@ export default {
   methods: {
     async checkAuthStatus() {
       try {
+        console.log('Header: Checking auth status...');
         const status = await authService.getSpotifyAuthStatus();
+        console.log('Header: Auth status response:', status);
         this.authStatus = status.authorized;
+        console.log('Header: Set authStatus to:', this.authStatus);
       } catch (error) {
-        console.error('Failed to check auth status:', error);
+        console.error('Header: Failed to check auth status:', error);
         this.authStatus = false;
       }
     }
